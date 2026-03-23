@@ -1,0 +1,21 @@
+{
+  "name": "unifi-inapp-2fa",
+  "version": "1.0.0",
+  "description": "Multi-user UniFi WiFi password rotator with in-app controller config and super admin 2FA",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "init-admin": "node scripts/init-admin.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "mysql2": "^3.11.0",
+    "node-cron": "^3.0.3",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0"
+  }
+}

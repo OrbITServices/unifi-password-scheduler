@@ -1,0 +1,30 @@
+<%- include('partials_header') %>
+
+<div class="card">
+  <h1>Vouchers for <%= wifi.ssid_name %></h1>
+  <p><a href="/dashboard">Back to dashboard</a></p>
+</div>
+
+<div class="card">
+  <h2>Voucher Codes</h2>
+  <table>
+    <tr>
+      <th>Code</th>
+      <th>Guest</th>
+      <th>Booking Ref</th>
+      <th>Minutes</th>
+      <th>Created</th>
+    </tr>
+    <% codes.forEach(code => { %>
+      <tr>
+        <td><strong><%= code.voucher_code %></strong></td>
+        <td><%= code.guest_name || '—' %></td>
+        <td><%= code.booking_reference || '—' %></td>
+        <td><%= code.valid_minutes %></td>
+        <td><%= code.created_at %></td>
+      </tr>
+    <% }) %>
+  </table>
+</div>
+
+<%- include('partials_footer') %>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UniFi Scheduler</title>
+  <style>
+    body{font-family:Arial,sans-serif;margin:0;background:#0f172a;color:#e5e7eb} a{color:#93c5fd;text-decoration:none}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}.card{background:#111827;border:1px solid #334155;border-radius:16px;padding:18px;margin-bottom:18px}
+    input,select,button{padding:10px;border-radius:10px;border:1px solid #475569;background:#0b1220;color:#fff} button{cursor:pointer;background:#2563eb}
+    table{width:100%;border-collapse:collapse} th,td{padding:10px;border-bottom:1px solid #334155;text-align:left;vertical-align:top}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}.nav{display:flex;gap:12px;flex-wrap:wrap}
+    .flash{background:#1e293b;padding:12px;border-radius:12px;margin:12px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+	  .wifi-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.muted {
+  color: #9db0d0;
+  font-size: 14px;
+}
+
+.wifi-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid #22304d;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.wifi-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.wifi-card-head h3 {
+  margin: 0 0 6px;
+  font-size: 24px;
+}
+
+.wifi-meta {
+  color: #9db0d0;
+  font-size: 14px;
+}
+
+.wifi-last-password {
+  min-width: 220px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid #22304d;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 14px;
+}
+
+.wifi-sections {
+  display: grid;
+  gap: 16px;
+}
+
+.wifi-section {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid #22304d;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.wifi-section h4 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.help-text {
+  margin: 0 0 14px;
+  color: #9db0d0;
+  font-size: 14px;
+}
+
+.stack-form {
+  display: grid;
+  gap: 10px;
+}
+
+.stack-form label {
+  font-size: 13px;
+  color: #9db0d0;
+}
+
+.stack-form input,
+.stack-form select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #22304d;
+  background: #08101c;
+  color: #ebf1ff;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.button-row button,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  background: #3b82f6;
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid #22304d;
+}
+
+@media (max-width: 768px) {
+  .wifi-card-head {
+    flex-direction: column;
+  }
+
+  .wifi-last-password {
+    min-width: 100%;
+  }
+}
+	  
+	  * { box-sizing: border-box; }
+
+.stack-form input,
+.stack-form select {
+  width: 100%;
+  padding: 10px;
+}
+
+.wifi-card {
+  border: 1px solid #22304d;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 12px;
+}
+
+.wifi-section {
+  margin-top: 15px;
+}
+
+.wifi-topbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.muted {
+  color: #9db0d0;
+}
+	  
+	  .wifi-collapse {
+  border: 1px solid #22304d;
+  border-radius: 14px;
+  margin: 18px 0;
+  background: rgba(255,255,255,0.03);
+  overflow: hidden;
+}
+
+.wifi-collapse-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.wifi-collapse-summary::-webkit-details-marker {
+  display: none;
+}
+
+.wifi-summary-left,
+.wifi-summary-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.wifi-summary-left strong {
+  font-size: 16px;
+}
+
+.wifi-summary-meta,
+.wifi-summary-mode,
+.wifi-summary-password {
+  font-size: 13px;
+  color: #9db0d0;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid #22304d;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.wifi-collapse[open] .wifi-collapse-summary {
+  border-bottom: 1px solid #22304d;
+}
+
+.wifi-card {
+  padding: 20px;
+}
+  </style>
+</head>
+<body><div class="wrap">
+<div class="top">
+  <div><strong>UniFi WiFi Scheduler</strong></div>
+  <% if (currentUser) { %>
+  <div class="nav">
+    <a href="/">Dashboard</a>
+    <% if (currentUser.role === 'super_admin') { %><a href="/controller">Controllers</a><a href="/users">Users</a><a href="/2fa/setup">2FA Setup</a><% } %>
+    <form method="post" action="/logout" style="display:inline"><button type="submit">Logout</button></form>
+  </div>
+  <% } %>
+</div>
+<% if (flash) { %><div class="flash"><%= flash %></div><% } %>

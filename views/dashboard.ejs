@@ -1,0 +1,225 @@
+<%- include('partials_header') %>
+
+<div class="card">
+  <h1>Dashboard</h1>
+
+  <% if (sites.length) { %>
+  <form method="post" action="/select-site">
+    <select name="site_id">
+      <% sites.forEach(site => { %>
+      <option value="<%= site.id %>" <%= Number(chosenSiteId) === Number(site.id) ? 'selected' : '' %>>
+  <%= site.controller_name %> / <%= site.description_text || site.unifi_site_name %>
+</option>
+      <% }) %>
+    </select>
+    <button type="submit">Switch site</button>
+  </form>
+  <% } else { %>
+  <p>No sites assigned yet.</p>
+  <% } %>
+</div>
+
+<% if (chosenSiteId) { %>
+
+<div class="card">
+  <div class="wifi-topbar">
+    <div>
+      <h2>WiFi Networks</h2>
+      <p class="muted">Manage passwords or generate hotspot vouchers.</p>
+    </div>
+    <form method="post" action="/sites/<%= chosenSiteId %>/sync-wifi">
+      <button type="submit">Sync WiFi</button>
+    </form>
+  </div>
+
+  <% wifiRows.forEach(wifi => {
+  const mode = wifi.access_mode || (wifi.security_type === 'open' ? 'voucher' : 'password');
+%>
+
+<details class="wifi-collapse">
+  <summary class="wifi-collapse-summary">
+    <div class="wifi-summary-left">
+      <strong><%= wifi.ssid_name %></strong>
+      <span class="wifi-summary-meta"><%= wifi.security_type || 'Unknown security' %></span>
+    </div>
+    <div class="wifi-summary-right">
+      <span class="wifi-summary-mode"><%= mode === 'voucher' ? 'Voucher' : 'Password' %></span>
+      <span class="wifi-summary-password">
+        <%= wifi.last_password ? 'Password saved' : 'No password saved' %>
+      </span>
+    </div>
+  </summary>
+
+  <div class="wifi-card">
+    <div class="wifi-card-head">
+      <div>
+        <h3><%= wifi.ssid_name %></h3>
+        <div class="wifi-meta"><%= wifi.security_type || 'Unknown security' %></div>
+      </div>
+      <div class="wifi-last-password">
+        <strong>Last password</strong>
+        <div><%= wifi.last_password || '—' %></div>
+      </div>
+    </div>
+
+    <div class="wifi-section">
+      <h4>Access Type</h4>
+      <form method="post" action="/wifi/<%= wifi.id %>/access-mode" class="stack-form">
+        <select name="access_mode">
+          <option value="password" <%= mode === 'password' ? 'selected' : '' %>>Password</option>
+          <option value="voucher" <%= mode === 'voucher' ? 'selected' : '' %>>Hotspot Vouchers</option>
+        </select>
+        <button type="submit">Save</button>
+      </form>
+    </div>
+
+    <% if (mode === 'password') { %>
+
+    <div class="wifi-section">
+      <h4>1. Change Password Now</h4>
+      <p class="help-text">Apply a new WiFi password immediately.</p>
+
+      <form method="post" action="/wifi/<%= wifi.id %>/manual-change" class="stack-form">
+        <label>New password</label>
+        <input type="text" name="password" placeholder="Enter a new password" required>
+        <button type="submit">Apply now</button>
+      </form>
+    </div>
+
+    <div class="wifi-section">
+      <h4>2. Automatic Password Rotation</h4>
+      <p class="help-text">Choose how often this WiFi password should change automatically.</p>
+
+      <form method="post" action="/wifi/<%= wifi.id %>/schedules" class="stack-form schedule-form">
+        <label>Schedule name</label>
+        <input type="text" name="name" placeholder="Example: Monthly guest WiFi rotation" required>
+
+        <label>How often should it change?</label>
+        <select name="frequency" required>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly" selected>Monthly</option>
+        </select>
+
+        <label>Time</label>
+        <input type="time" name="run_time" value="09:00" required>
+
+        <label>Timezone</label>
+        <input type="text" name="timezone_name" value="Europe/London" required>
+
+        <label>Password type</label>
+        <select name="use_random_password" required>
+          <option value="1">Random secure password</option>
+          <option value="0">Use fixed password</option>
+        </select>
+
+        <label>Password length (for random passwords)</label>
+        <input type="number" name="password_length" value="16" min="8" max="64">
+
+        <label>Fixed password (only used if fixed mode is selected)</label>
+        <input type="text" name="fixed_password" placeholder="Optional">
+
+        <input type="hidden" name="cron_expr" value="0 9 1 * *">
+
+        <button type="submit">Save schedule</button>
+      </form>
+    </div>
+
+    <% } %>
+
+    <% if (mode === 'voucher') { %>
+
+    <div class="wifi-section">
+      <h4>1. Create Vouchers</h4>
+
+      <form method="post" action="/wifi/<%= wifi.id %>/vouchers/create" class="stack-form">
+        <input type="text" name="guest_name" placeholder="Guest name">
+        <input type="text" name="booking_reference" placeholder="Booking reference">
+        <input type="number" name="voucher_count" value="1" min="1">
+        <input type="number" name="duration_hours" value="24" min="1">
+        <button type="submit">Generate vouchers</button>
+      </form>
+    </div>
+
+    <div class="wifi-section">
+      <h4>2. Create From Booking</h4>
+
+      <form method="post" action="/wifi/<%= wifi.id %>/vouchers/from-booking" class="stack-form">
+        <input type="text" name="guest_name" placeholder="Guest name">
+        <input type="text" name="booking_reference" placeholder="Booking reference">
+        <input type="datetime-local" name="check_in">
+        <input type="datetime-local" name="check_out">
+        <input type="number" name="people" value="1" min="1">
+        <button type="submit">Create booking vouchers</button>
+      </form>
+    </div>
+
+    <div class="wifi-section">
+      <a href="/wifi/<%= wifi.id %>/vouchers">View vouchers</a>
+    </div>
+
+    <% } %>
+
+    <div class="wifi-section">
+      <a href="/share/<%= wifi.id %>">QR / Print</a>
+    </div>
+  </div>
+</details>
+
+<% }) %>
+</div>
+
+<div class="card">
+  <h2>Recent Voucher Codes</h2>
+
+  <% if (voucherRows && voucherRows.length) { %>
+    <table>
+      <tr>
+        <th>SSID</th>
+        <th>Voucher Code</th>
+        <th>Guest</th>
+        <th>Booking Ref</th>
+        <th>Minutes</th>
+        <th>Created</th>
+      </tr>
+      <% voucherRows.forEach(v => { %>
+        <tr>
+          <td><%= v.ssid_name %></td>
+          <td><strong><%= v.voucher_code %></strong></td>
+          <td><%= v.guest_name || '—' %></td>
+          <td><%= v.booking_reference || '—' %></td>
+          <td><%= v.valid_minutes %></td>
+          <td><%= v.created_at %></td>
+        </tr>
+      <% }) %>
+    </table>
+  <% } else { %>
+    <p>No voucher codes saved locally yet.</p>
+  <% } %>
+</div>
+
+<% } %>
+<script>
+  document.querySelectorAll('.schedule-form').forEach(form => {
+    form.addEventListener('submit', function () {
+      const frequency = form.querySelector('[name="frequency"]').value;
+      const runTime = form.querySelector('[name="run_time"]').value || '09:00';
+      const parts = runTime.split(':');
+      const hour = parts[0] || '09';
+      const minute = parts[1] || '00';
+
+      let cron = '0 9 1 * *';
+
+      if (frequency === 'daily') {
+        cron = `${minute} ${hour} * * *`;
+      } else if (frequency === 'weekly') {
+        cron = `${minute} ${hour} * * 1`;
+      } else if (frequency === 'monthly') {
+        cron = `${minute} ${hour} 1 * *`;
+      }
+
+      form.querySelector('[name="cron_expr"]').value = cron;
+    });
+  });
+</script>
+<%- include('partials_footer') %>

@@ -1,0 +1,12 @@
+<%- include('partials_header') %>
+<div class="card" style="max-width:700px;margin:20px auto">
+  <h1>Enable 2FA for Super Admin</h1>
+  <p>Scan this QR code with Microsoft Authenticator, Google Authenticator, or 1Password.</p>
+  <p><img src="<%= qrDataUrl %>" alt="QR" style="max-width:260px;background:#fff;padding:10px;border-radius:12px"></p>
+  <p>Secret: <code><%= secret %></code></p>
+  <form method="post" action="/2fa/setup">
+    <p><input type="text" name="token" placeholder="Enter the 6-digit code" required style="width:100%"></p>
+    <p><button type="submit">Confirm and Enable</button></p>
+  </form>
+</div>
+<%- include('partials_footer') %>

@@ -1,0 +1,31 @@
+<%- include('partials_header') %>
+<div class="grid">
+  <div class="card">
+    <h1>Add Controller</h1>
+    <form method="post" action="/controller">
+      <p><input type="text" name="name" placeholder="Controller name" required style="width:100%"></p>
+      <p><input type="url" name="base_url" placeholder="https://controller.example.com" required style="width:100%"></p>
+      <p><input type="text" name="username" placeholder="UniFi username" required style="width:100%"></p>
+      <p><input type="password" name="password_plain" placeholder="UniFi password" required style="width:100%"></p>
+      <p><select name="mode"><option value="unifi_os">UniFi OS</option><option value="legacy">Legacy</option></select></p>
+      <p><button type="submit">Save controller</button></p>
+    </form>
+  </div>
+  <div class="card">
+    <h2>Saved Controllers</h2>
+    <table>
+      <tr><th>Name</th><th>URL</th><th>Actions</th></tr>
+      <% controllers.forEach(c => { %>
+      <tr>
+        <td><%= c.name %></td>
+        <td><%= c.base_url %></td>
+        <td>
+          <form method="post" action="/controller/<%= c.id %>/test" style="display:inline"><button type="submit">Test</button></form>
+          <form method="post" action="/controller/<%= c.id %>/sync-sites" style="display:inline"><button type="submit">Sync sites</button></form>
+        </td>
+      </tr>
+      <% }) %>
+    </table>
+  </div>
+</div>
+<%- include('partials_footer') %>

@@ -1,0 +1,9 @@
+<%- include('partials_header') %>
+<div class="card" style="max-width:460px;margin:40px auto">
+  <h1>Super Admin 2FA</h1>
+  <form method="post" action="/2fa">
+    <p><input type="text" name="token" placeholder="6-digit code" required style="width:100%"></p>
+    <p><button type="submit">Verify</button></p>
+  </form>
+</div>
+<%- include('partials_footer') %>

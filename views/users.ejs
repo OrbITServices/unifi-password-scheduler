@@ -1,0 +1,32 @@
+<%- include('partials_header') %>
+<div class="grid">
+  <div class="card">
+    <h1>Create User</h1>
+    <form method="post" action="/users">
+      <p><input type="text" name="full_name" placeholder="Full name" required style="width:100%"></p>
+      <p><input type="email" name="email" placeholder="Email" required style="width:100%"></p>
+      <p><input type="password" name="password" placeholder="Password" required style="width:100%"></p>
+      <p><select name="role"><option value="user">User</option><option value="super_admin">Super Admin</option></select></p>
+      <p><button type="submit">Create user</button></p>
+    </form>
+  </div>
+  <div class="card">
+    <h2>Users & Site Access</h2>
+    <% users.forEach(u => { %>
+      <div style="border:1px solid #334155;border-radius:12px;padding:12px;margin-bottom:12px">
+        <strong><%= u.full_name %></strong> - <%= u.email %> - <%= u.role %> <% if (u.two_factor_enabled) { %>(2FA on)<% } %>
+        <% if (u.role === 'user') { %>
+        <form method="post" action="/users/<%= u.id %>/sites" style="margin-top:10px">
+          <select name="site_ids" multiple size="6" style="width:100%">
+            <% sites.forEach(site => { const assigned = assignments.find(a => a.user_id === u.id && a.site_id === site.id); %>
+              <option value="<%= site.id %>" <%= assigned ? 'selected' : '' %>><%= site.controller_name %> / <%= site.unifi_site_name %></option>
+            <% }) %>
+          </select>
+          <p><button type="submit">Save assignments</button></p>
+        </form>
+        <% } %>
+      </div>
+    <% }) %>
+  </div>
+</div>
+<%- include('partials_footer') %>
