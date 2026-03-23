@@ -71,24 +71,23 @@ This app puts everything in one place and automates the repetitive stuff.
 
 Clone the repo:
 
-```bash
-git clone https://github.com/YOUR_USERNAME/unifi-wifi-manager.git
-cd unifi-wifi-manager
+git clone https://github.com/OrbITServices/unifi-wifi-manager.git  
+cd unifi-wifi-manager  
 
-Install dependencies:
+###Install dependencies:
 
-npm install
+npm install  
 
-Create a .env file:
+###Create a `.env` file with:
 
-PORT=3000
-SESSION_SECRET=change-me
+PORT=3000  
+SESSION_SECRET=change-me  
 
-DB_HOST=localhost
-DB_USER=root
-DB_PASS=password
-DB_NAME=unifi_app
+DB_HOST=localhost  
+DB_USER=root  
+DB_PASS=password  
+DB_NAME=unifi_app  
 
-Run the app:
+###Run the app:
 
-node app.js
+node app.js  
