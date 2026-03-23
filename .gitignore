@@ -1,0 +1,21 @@
+# Node
+node_modules/
+npm-debug.log
+
+# Environment
+.env
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Plesk / server
+httpdocs/
+tmp/
+
+# Optional (if you export DB files)
+*.sql
