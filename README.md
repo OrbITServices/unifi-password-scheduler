@@ -74,11 +74,11 @@ Clone the repo:
 git clone https://github.com/OrbITServices/unifi-wifi-manager.git  
 cd unifi-wifi-manager  
 
-###Install dependencies:
+### Install dependencies:
 
 npm install  
 
-###Create a `.env` file with:
+### Create a `.env` file with:
 
 PORT=3000  
 SESSION_SECRET=change-me  
