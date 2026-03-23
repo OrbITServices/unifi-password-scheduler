@@ -69,7 +69,7 @@ This app puts everything in one place and automates the repetitive stuff.
 
 ## Getting started
 
-Clone the repo:
+### Clone the repo:
 
 git clone https://github.com/OrbITServices/unifi-wifi-manager.git  
 cd unifi-wifi-manager  
